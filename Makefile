@@ -5,15 +5,10 @@ version-file := 'src/assets/json/version.json'
 clean:
 	sudo rm -rf dist
 
-run-dev: clean
-	mkdir -p dist
-	docker-compose -f docker-compose-dev.yml down
-	docker-compose -f docker-compose-dev.yml up
 pre-prod: clean
 	echo "{\"version\": \"pre-prod-$(date)-$(commit)\"}" > $(version-file)
 	#npm run build-pre-prod
 	mkdir -p dist
-	docker-compose -f docker-compose-build-preprod.yml down
 	docker-compose -f docker-compose-build-preprod.yml up
 	git reset -- $(version-file)
 deploy-pre-prod: pre-prod
@@ -23,11 +18,12 @@ prod: clean
 	echo "{\"version\": \"prod-$(date)-$(commit)\"}" > $(version-file)
 	# npm run build-production
 	mkdir -p dist
-	docker-compose -f docker-compose-build-production.yml down
 	docker-compose -f docker-compose-build-production.yml up
 	git reset -- $(version-file)
 deploy-prod: prod
 	scp -r dist/* fa-gate-adm:/data/www/demo/francis/dist
+test: 
+	docker-compose -f docker-compose-run-production.yml up -d
 
 cloud: clean
 	echo "{\"version\": \"cloud-$(date)-$(commit)\"}" > $(version-file)
