@@ -4,6 +4,11 @@ version-file := 'src/assets/json/version.json'
 
 clean:
 	sudo rm -rf dist
+dev: 
+	docker-compose -f docker-compose-run-dev.yml up -d
+
+dev-stop:
+	docker-compose -f docker-compose-run-dev.yml down
 
 pre-prod: clean
 	echo "{\"version\": \"pre-prod-$(date)-$(commit)\"}" > $(version-file)
