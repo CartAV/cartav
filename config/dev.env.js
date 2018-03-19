@@ -3,6 +3,7 @@ var prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
+  ES_HOST: '"http://localhost:9200"',
   PATH: '"/av/test"',
   indices: {
     acc: '"es5dev_2005_2015_accidents"',
