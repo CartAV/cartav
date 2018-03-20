@@ -4,8 +4,25 @@ version-file := 'src/assets/json/version.json'
 
 clean:
 	sudo rm -rf dist
-dev: 
+
+download:
+ifeq ("$(wildcard esdata)","")
+	mkdir -p esdata
+endif
+ifeq ("$(wildcard esdata/dev_cartav_1node.tar.gz.gpg)","")
+	wget http://catalog.datalab.mi/s/resources/cartav-jeu-de-developpement-preindexe/20180320-080437/dev_cartav_1node.tar.gz.gpg.zip -O esdata/dev_cartav_1node.tar.gz.gpg
+endif
+
+decrypt: download
+ifeq ("$(wildcard esdata/dev/nodes/0/)","")
+	@echo unpacking sample data
+	@cat esdata/dev_cartav_1node.tar.gz.gpg | gpg -q -d --batch --passphrase "*AH5xieZa!" | sudo tar xzf - -C esdata/
+endif
+
+dev: decrypt 
 	docker-compose -f docker-compose-run-dev.yml up -d
+
+
 
 dev-stop:
 	docker-compose -f docker-compose-run-dev.yml down
