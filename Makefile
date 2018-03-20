@@ -33,6 +33,7 @@ pre-prod: clean
 	mkdir -p dist
 	docker-compose -f docker-compose-build-preprod.yml up
 	git reset -- $(version-file)
+
 deploy-pre-prod: pre-prod
 	scp -r dist/* fa-gate-adm:/data/www/demo/francis/dist/test
 
