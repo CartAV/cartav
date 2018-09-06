@@ -35,7 +35,7 @@ pre-prod: clean
 	git reset -- $(version-file)
 
 deploy-pre-prod: pre-prod
-	scp -r dist/* fa-gate-adm:/data/www/demo/francis/dist/test
+	scp -r dist/* fa-proxy-muserfi:/var/www/demo/francis/dist/test
 
 prod: clean
 	echo "{\"version\": \"prod-$(date)-$(commit)\"}" > $(version-file)
@@ -44,7 +44,7 @@ prod: clean
 	docker-compose -f docker-compose-build-production.yml up
 	git reset -- $(version-file)
 deploy-prod: prod
-	scp -r dist/* fa-gate-adm:/data/www/demo/francis/dist
+	scp -r dist/* fa-proxy-muserfi:/var/www/demo/francis/dist
 test: 
 	docker-compose -f docker-compose-run-production.yml up -d
 
