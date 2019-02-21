@@ -848,4 +848,8 @@ export default {
   color: rgb(0, 0, 255);
   font-weight: bold;
 }
+
+.leaflet-bar button {
+  display: inline-block !important;
+}
 </style>
