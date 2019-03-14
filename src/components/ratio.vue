@@ -69,7 +69,7 @@
   </div>
   <h4>Fonds de carte</h4>
   <span v-for="(url, name) in basemaps">
-    <input type="radio" :id=url :value=url v-model="basemapUrl">
+    <input type="radio" :id="url" :value="name" v-model="baseMap">
     <label v-bind:for="url">
       {{ name }}
     </label>
@@ -95,12 +95,12 @@ export default {
     }
   },
   computed: {
-    basemapUrl: {
+    baseMap: {
       get () {
-        return this.$store.state.basemapUrl
+        return this.$store.state.baseMap
       },
-      set (basemapUrl) {
-        this.$store.commit('set_basemapUrl', basemapUrl)
+      set (baseMap) {
+        this.$store.commit('set_base_map', baseMap)
       }
     },
     localLevelData: {

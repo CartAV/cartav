@@ -142,7 +142,7 @@ export default new Vuex.Store({
     localLevelData: constants.ACC,
     colorScale: colors.defaultColor,
     colorScaleInverted: false,
-    basemapUrl: criteriaList.basemaps[Object.keys(criteriaList.basemaps)[1]],
+    baseMap: Object.keys(criteriaList.basemaps)[1],
     showSpinner: false,
     hideAll: false,
     acc_dates: [new Date(0), new Date(0)],
@@ -220,8 +220,8 @@ export default new Vuex.Store({
     set_divisor (state, divisor) {
       state.divisor = divisor
     },
-    set_basemapUrl (state, basemapUrl) {
-      state.basemapUrl = basemapUrl
+    set_base_map (state, baseMap) {
+      state.baseMap = baseMap
     },
     set_showSpinner (state, show) {
       state.showSpinner = show

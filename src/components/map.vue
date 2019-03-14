@@ -124,7 +124,7 @@ export default {
     divisor: 'divisor',
     localLevelDisplay: 'localLevelDisplay',
     localLevelData: 'localLevelData',
-    basemapUrl: 'basemapUrl',
+    baseMap: 'baseMap',
     hideAll: 'hideAll',
     pageForPrint: 'pageForPrint',
     view () {
@@ -166,8 +166,8 @@ export default {
     accidentsLocal () {
       this.displayLocalLayer()
     },
-    basemapUrl () {
-      this.tileLayer.setUrl(this.basemapUrl)
+    baseMap () {
+      this.tileLayer.setUrl(this.$store.getters.baseMapUrl)
     },
     '$route' (to, from) {
       if (to.path !== from.path) {
@@ -578,18 +578,17 @@ export default {
         window.open(window.location.href + '&pageForPrint=true', '_blank')
       }, 'Imprimer la carte').addTo(vm.map)
     }
-
-    this.tileLayer = L.tileLayer(this.basemapUrl, {
+    this.tileLayer = L.tileLayer(this.$store.getters.baseMapUrl, {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
       maxZoom: 18
     }).addTo(this.map)
 
     this.tileLayer
       .on('tileerror', function () {
-        // fallback is tile server cannot be reached
+        // fallback if tile server cannot be reached
         tileErrorCount++
         if (tileErrorCount > 10) {
-          vm.$store.commit('set_basemapUrl', 'http://osm.psi.minint.fr/{z}/{x}/{y}.png')
+          vm.$store.commit('set_base_map', 'OSM classique (tuiles STSISI)')
         }
       })
       .on('tileloadstart ', function () {
@@ -605,7 +604,7 @@ export default {
       vm.konami = (vm.konami + e.keyCode).slice(-20)
       if (vm.konami === '38384040373937396665') {
         vm.showCarteAndFurious = true
-        vm.$store.commit('set_basemapUrl', 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png')
+        vm.$store.commit('set_base_map', 'Noir & noir')
       }
     })
 
