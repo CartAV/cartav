@@ -80,29 +80,6 @@ function getLevelShapesGeojson (decoupage, view) {
   }
 }
 
-function createUrlQuery (context) {
-  const state = context.state
-  const sha = context.getters.configDigest
-  const query = Object.assign({}, state.route.query)
-  query.filters = furl.encodeFilters(state.criteria_list)
-  query.digest = sha
-
-  query.services = state.services_selected.list.join(';;')
-
-  if (context.getters.view.content === 'detailedContent') {
-    query.data = state.localLevelData
-    query.display = state.localLevelDisplay
-  } else if (context.getters.view.content === 'metric') {
-    query.dividende = state.dividende
-    query.divisor = state.divisor
-  }
-  query.accB = dateforUrl(state.acc_dates[0])
-  query.accE = dateforUrl(state.acc_dates[1])
-  query.pveB = dateforUrl(state.pve_dates[0])
-  query.pveE = dateforUrl(state.pve_dates[1])
-  return query
-}
-
 function formatDate (d) {
   return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
 }
@@ -249,6 +226,10 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    set_base_map (context, baseMap) {
+      context.commit('set_base_map', baseMap)
+      context.dispatch('push_url_query')
+    },
     set_services_selected (context, servicesSelected) {
       context.commit('set_services_selected', servicesSelected)
       context.dispatch('push_url_query')
@@ -273,11 +254,11 @@ export default new Vuex.Store({
       }
     },
     push_url_query (context) {
-      const query = createUrlQuery(context)
+      const query = context.getters.createUrlQuery
       router.push({path: context.state.route.path, query: query})
     },
     replace_url_query (context) {
-      const query = createUrlQuery(context)
+      const query = context.getters.createUrlQuery
       router.replace({path: context.state.route.path, query: query})
     },
     set_criteria (context, o) {
@@ -577,6 +558,31 @@ export default new Vuex.Store({
     },
     levelIsCirco (state) {
       return state.route.params.view === 'circonscription' || state.route.params.view === 'circonscriptions'
+    },
+    createUrlQuery (state, getters) {
+      const sha = getters.configDigest
+      const query = Object.assign({}, state.route.query)
+      query.filters = furl.encodeFilters(state.criteria_list)
+      query.digest = sha
+
+      query.services = state.services_selected.list.join(';;')
+
+      if (getters.view.content === 'detailedContent') {
+        query.data = state.localLevelData
+        query.display = state.localLevelDisplay
+      } else if (getters.view.content === 'metric') {
+        query.dividende = state.dividende
+        query.divisor = state.divisor
+      }
+      query.accB = dateforUrl(state.acc_dates[0])
+      query.accE = dateforUrl(state.acc_dates[1])
+      query.pveB = dateforUrl(state.pve_dates[0])
+      query.pveE = dateforUrl(state.pve_dates[1])
+      query.baseMap = state.baseMap
+      return query
+    },
+    baseMapUrl (state) {
+      return criteriaList.basemaps[state.baseMap]
     }
   }
 })

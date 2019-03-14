@@ -54,6 +54,9 @@ export default {
       if (this.$route.query.pageForPrint) {
         this.$store.commit('set_page_for_print', true)
       }
+      if (this.$route.query.baseMap) {
+        this.$store.commit('set_base_map', this.$route.query.baseMap)
+      }
     }
     this.$store.dispatch('replace_url_query')
     this.$store.dispatch('getDataDateBounds')

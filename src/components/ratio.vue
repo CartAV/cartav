@@ -100,7 +100,7 @@ export default {
         return this.$store.state.baseMap
       },
       set (baseMap) {
-        this.$store.commit('set_base_map', baseMap)
+        this.$store.dispatch('set_base_map', baseMap)
       }
     },
     localLevelData: {
