@@ -65,7 +65,7 @@
                       <div class="col-xs-8 funkyradio">
                         <div class="funkyradio-default">
                             <input type="checkbox" name="checkbox" v-bind:id="criteriaName+valName" :checked="val"/>
-                            <label v-bind:for="criteriaName+valName" v-on:click.self="set_criteria($event,categoryName, criteriaName, valName, !val)">
+                            <label v-bind:for="criteriaName+valName" v-on:click.self.prevent="set_criteria($event,categoryName, criteriaName, valName, !val)">
                               {{ criteria.labels && criteria.labels[valName] ? criteria.labels[valName] : valName }}
                               <div class="seul" v-on:click.prevent="selectAlone($event, categoryName, criteriaName, valName)"> seul </div>
                             </label>
