@@ -142,8 +142,7 @@
                   </form>
                 </span>
                 <span v-else>
-                  <!-- {{ f.name }} -->
-                  <a :href="f.url">{{ f.name }}</a>
+                  <a href="" @click.prevent="followLink(f.url)">{{ f.name }}</a>
                 </span>
                 <span :class="{favoriteOptions: true, hideFavoritesOptions: showDeleteView === f.name || f.name === editFavoriteName}">
                   <i class="fa fa-pencil" title="éditer le nom" v-on:click='favoriteNameChange(f.name)'></i>
@@ -243,6 +242,13 @@ export default {
     }
   },
   methods: {
+    followLink (url) {
+      // A change in the url *parameters* does not trigger a change in the store.
+      // So if the link is opened in the same tab, the filters won't update
+      // This is why the page is reloaded, without getting the files again from the server (=> argument = false)
+      window.location = url
+      window.location.reload(false)
+    },
     warning (id) {
       if (this.$store.getters.localLevel) {
         if (id === 'pveFilters' && this.$store.state.localLevelData === constants.ACC) {
