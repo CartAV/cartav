@@ -128,7 +128,7 @@
 
           </span>
           <span v-else>
-            <button type="button" class="btn btn-default" v-on:click='showVueInputField'><i class="fa fa-plus"></i> Ajouter la vue courrante</button>
+            <button type="button" class="btn btn-default" v-on:click='showVueInputField'><i class="fa fa-plus"></i> Ajouter la vue courante</button>
           </span>
 
           <p>
@@ -143,7 +143,7 @@
                 </span>
                 <span v-else>
                   <!-- {{ f.name }} -->
-                  <a :href="f.url" target="_blank">{{ f.name }}</a>
+                  <a :href="f.url">{{ f.name }}</a>
                 </span>
                 <span :class="{favoriteOptions: true, hideFavoritesOptions: showDeleteView === f.name || f.name === editFavoriteName}">
                   <i class="fa fa-pencil" title="éditer le nom" v-on:click='favoriteNameChange(f.name)'></i>
@@ -273,6 +273,7 @@ export default {
     },
     set_criteria (e, categoryName, criteriaName, valName, value) {
       const criteriaPath = `${categoryName}.${criteriaName}.values.${valName}`
+      console.log(criteriaPath)
       this.$store.dispatch('set_criteria', {criteriaPath: criteriaPath, value: value, router: this.$router})
     },
     agg_pve_value (categoryName, criteriaName, valName, niceDisplay = true) {
