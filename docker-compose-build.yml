@@ -1,15 +1,15 @@
 version: '2'
 
 services:
-  cartav-build-prod:
+  cartav-build:
     build: 
       context: .
-      dockerfile: Dockerfile.build-production
+      dockerfile: Dockerfile.build
       args:
         proxy: ${http_proxy}
         APP_PATH: ${APP_PATH}
-    image: cartav-build-prod:latest
-    container_name: cartav-build-prod
+    image: cartav-build:latest
+    container_name: cartav-build
     volumes:
       - ./build:/cartav/build
       - ./config:/cartav/config

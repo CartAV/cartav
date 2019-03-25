@@ -7,22 +7,21 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./nginx-dev.template:/etc/nginx/conf.d/default.template
-      - ./dist:/usr/share/nginx/html
     command: /bin/bash -c '(sed "s|<APP_PATH>|${APP_PATH}|g;" < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf) && nginx -g "daemon off;"' 
     ports:
       - "${PORT}:80"
     restart: always
 
 
-  cartav-run-dev:
+  cartav-dev:
     build: 
       context: .
-      dockerfile: Dockerfile.run-dev
+      dockerfile: Dockerfile.dev
       args:
         proxy: ${http_proxy}
         APP_PATH: ${APP_PATH}
-    image: cartav-run-dev:latest
-    container_name: cartav-run-dev
+    image: cartav-dev:latest
+    container_name: cartav-dev
     volumes:
       - ./build:/cartav/build
       - ./config:/cartav/config
