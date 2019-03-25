@@ -20,10 +20,14 @@ export PORT=80
 # default elasticsearch is ok for developpement usage, not for production
 export ES_MEM = 512m
 export ES_VERSION = 6.1.2
+export BRANCH=dev
 
 # artifacts including enable overriding of global vars
 dummy		    := $(shell touch artifacts)
 include ./artifacts
+
+update:
+	git pull origin ${BRANCH}
 
 clean-docker:
 	docker container rm cartav-build || echo
