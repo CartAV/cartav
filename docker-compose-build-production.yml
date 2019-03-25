@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile.build-production
       args:
         proxy: ${http_proxy}
+        APP_PATH: ${APP_PATH}
     image: cartav-build-prod:latest
     container_name: cartav-build-prod
     volumes:
@@ -15,7 +16,7 @@ services:
       - ./index.html:/cartav/index.html
       - ./src:/cartav/src
       - ./static:/cartav/static
-      - ./dist:/cartav/dist/
+      - ./build-dist:/cartav/dist/
       - ./.eslintrc.js:/cartav/.eslintrc.js
       - ./.eslintignore:/cartav/.eslintignore
       - ./.babelrc:/cartav/.babelrc

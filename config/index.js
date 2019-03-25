@@ -2,14 +2,10 @@
 var path = require('path')
 var assetsPublicPath
 var env_path = './prod.env'
-if (process.env.prod_type === 'production') {
-  assetsPublicPath = '/av/'
-  env_path = './prod.env'
-} else if (process.env.prod_type === 'pre-production') {
-  assetsPublicPath = '/av/test/'
+assetsPublicPath = '/' + process.env.APP_PATH.replace('"','') + '/'
+if (process.env.prod_type === 'pre-production') {
   env_path = './pre-prod.env'
 } else if (process.env.prod_type === 'cloud') {
-  assetsPublicPath = '/'
   env_path = './cloud.env'
 }
 

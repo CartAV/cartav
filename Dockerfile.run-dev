@@ -1,5 +1,8 @@
 FROM node:8
 ARG proxy
+ARG APP_PATH
+
+ENV APP_PATH $APP_PATH
 
 WORKDIR /cartav
 COPY package.json .

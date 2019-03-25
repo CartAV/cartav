@@ -8,7 +8,7 @@ export default { search, searchAsGeoJsonPoints, searchAsGeoJsonGeom, generateQue
 const index = process.env.indices
 
 const client = new elasticsearch.Client({
-  host: process.env.ES_HOST,
+  host: window.location.host + '/' + process.env.APP_PATH + '/api/v0',
   apiVersion: '5.x'
 })
 
