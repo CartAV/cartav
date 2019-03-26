@@ -13,6 +13,7 @@ version-file := 'src/assets/json/version.json'
 
 # name of app
 export APP_PATH = av
+export COMPOSE_PROJECT_NAME = cartav
 
 # default exposition port, should be overrided in 'artifacts' only
 export PORT=80

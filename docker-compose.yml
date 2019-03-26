@@ -3,7 +3,7 @@ version: '2'
 services:
   nginx:
     image: nginx
-    container_name: cartav-nginx
+    container_name: ${COMPOSE_PROJECT_NAME}-nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./nginx-run.template:/etc/nginx/conf.d/default.template
@@ -17,7 +17,7 @@ services:
 
   esnode1:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:${ES_VERSION}
-    container_name: cartav-esnode1
+    container_name: ${COMPOSE_PROJECT_NAME}-esnode1
     environment:
       - cluster.name=cartav-cluster
       - bootstrap.memory_lock=true
