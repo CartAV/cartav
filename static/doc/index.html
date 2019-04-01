@@ -19,7 +19,7 @@
       <h1 class="title is-1 has-text-centered">Cartographie accidents et verbalisation</h1>
     </div>
   </header>
-  
+
 
   <section class="hero is-fullheight">
     <div class="hero-body">
@@ -41,19 +41,22 @@ C’est à dire au moins la version courante au sein du ministère de l’Intér
 
 ## Contacts
 
-Jusqu’à fin octobre 2017, les développeurs peuvent être contactés directement :
+Les développeurs ne travaillent plus pour le ministère mais peuvent néanmoins être contactés directement :
 
-* `francis.chabouis@interieur.gouv.fr`
-* `tristram.grabener@interieur.gouv.fr`
+* `fchabouis@gmail.com`
+* `tristramg@gmail.com`
 
-Au delà de cette date, veuillez contacter
+Les contacts au sein du ministère sont :
 
 * `daniel.ansellem@interieur.gouv.fr`
 * `fabien.antoine@interieur.gouv.fr`
+* `laurent.dupont2@interieur.gouv.fr`
+
+Le code source du projet est publié sur github à cette [adresse](https://github.com/CartAV/cartav), c'est un bon endroit pour y faire remonter les bugs et les remarques.
 
 ## Source des données
 
-* Accidents : base des accidents corporels (BAAC) en donnée ouverte de 2005 à 2016
+* Accidents : base des accidents corporels (BAAC)
 * Verbalisation : base PVE (PV électronique)
 * Découpage administratif : données ouvertes IGN
 * Linéaire de voirie : OpenStreetMap
@@ -61,7 +64,7 @@ Au delà de cette date, veuillez contacter
 
 ## Contexte du prototype
 
-Ce projet est réalisé dans le cadre des [Entrepreneurs d’Intérêt Général](http://www.gouvernement.fr/entrepreneur-interet-general)
+Ce projet a été réalisé dans le cadre des [Entrepreneurs d’Intérêt Général](http://www.gouvernement.fr/entrepreneur-interet-general)
 
 ## Contenu de l'aide
 * [Modifier les métriques](#section1)
@@ -256,13 +259,35 @@ les contrôles automatisés, ni les données délictuelles.
       <div class="container">
         <div class="columns">
           <div class="content column md">
-# Partager & Imprimer 
+# Partager
 
-Il est possible de partager/sauvegarder une vue particulière (c'est à dire sa localisation, ses données représentées et ses filtres) en copiant l'adresse de la carte à tout moment.
+Il est possible de partager une vue particulière (c'est à dire sa localisation, ses données représentées et ses filtres) en copiant l'adresse URL de la carte à tout moment.
 
-En vue d'une impression, il est également possible de cacher tous les elements de navigation de la carte grâce au raccourci clavier `alt + p`. Associé à un passage en plein écran (touche `F11`), cela permet de maximiser la surface de carte qu'il est possible de capturer par une copie d'écran.
+Il est possible d'enregistrer des vues favorites en cliquant sur l'étoile :star: dans la barre verticale de l'application.
         </div>
         <div class="column is-half">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <section id="section8" class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns">
+          <div class="content column md">
+# Imprimer
+
+Pour correctement imprimer la carte, il faut cliquer sur l'icône d'impression en haut à gauche de la carte. Un nouvel onglet s'ouvre alors,
+permettant d'ajuster la carte, de lui ajouter un titre et un commentaire. Les différents éléments peuvent être ajustés en taille.
+
+Enfin, cliquer sur "Générer le document" tout en bas de la page.
+        </div>
+        <div class="column is-half">
+          <video src="casts/howtoprint.webm" autoplay loop>Vidéo d'une impression.</video>
           </div>
         </div>
       </div>
@@ -272,7 +297,7 @@ En vue d'une impression, il est également possible de cacher tous les elements 
 
 <script>
   (function() {
-    var converter = new showdown.Converter();
+    var converter = new showdown.Converter({emoji: true});
     var markdown = document.getElementsByClassName("md");
     for (var i = 0; i < markdown.length; i++) {
       var el = markdown[i];
