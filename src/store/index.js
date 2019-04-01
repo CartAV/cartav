@@ -100,7 +100,7 @@ export default new Vuex.Store({
   },
   strict: process.env.NODE_ENV !== 'production',
   state: {
-    criteria_list: JSON.parse(JSON.stringify(criteriaList.filters)),
+    criteria_list: Object.freeze(JSON.parse(JSON.stringify(criteriaList.filters))),
     services_list: [],
     services_selected: {fieldName: criteriaList.services_field, list: []},
     accidents: {},
@@ -112,7 +112,6 @@ export default new Vuex.Store({
     radars_geojson: {},
     accidents_agg_by_road: {},
     pve_agg_by_road: {},
-    pve_geojson: {},
     dividende: 'PV électroniques',
     divisor: 'accidents',
     localLevelDisplay: constants.AGG_BY_ROAD,
@@ -134,7 +133,7 @@ export default new Vuex.Store({
       state.services_selected.list = list
     },
     set_services_list (state, list) {
-      state.services_list = list
+      state.services_list = Object.freeze(list)
     },
     set_localLevelDisplay (state, localLevelDisplay) {
       state.localLevelDisplay = localLevelDisplay
@@ -162,34 +161,31 @@ export default new Vuex.Store({
       state.criteria_list = furl.decodeFilters(state.criteria_list, encodedFilters)
     },
     accidents_data (state, response) {
-      state.accidents = response
+      state.accidents = Object.freeze(response)
     },
     verbalisations_data (state, response) {
-      state.verbalisations = response
+      state.verbalisations = Object.freeze(response)
     },
     accidents_value_by_filter (state, val) {
-      state.accidents_value_by_filter = val
+      state.accidents_value_by_filter = Object.freeze(val)
     },
     pve_value_by_filter (state, val) {
-      state.pve_value_by_filter = val
+      state.pve_value_by_filter = Object.freeze(val)
     },
     accidents_geojson (state, geojson) {
-      state.accidents_geojson = geojson
+      state.accidents_geojson = Object.freeze(geojson)
     },
     radars_geojson (state, geojson) {
-      state.radars_geojson = geojson
+      state.radars_geojson = Object.freeze(geojson)
     },
     accidents_agg_by_road (state, json) {
-      state.accidents_agg_by_road = json
+      state.accidents_agg_by_road = Object.freeze(json)
     },
     pve_agg_by_road (state, json) {
-      state.pve_agg_by_road = json
-    },
-    pve_geojson (state, geojson) {
-      state.pve_geojson = geojson
+      state.pve_agg_by_road = Object.freeze(json)
     },
     contour (state, geojson) {
-      state.contour = geojson
+      state.contour = Object.freeze(geojson)
     },
     set_dividende (state, dividende) {
       state.dividende = dividende
