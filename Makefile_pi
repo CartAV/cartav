@@ -1,0 +1,260 @@
+
+SHELL=/bin/bash
+
+commit       := $(shell git rev-parse HEAD | cut -c1-8)
+date         := $(shell date -I)
+version-file := 'src/assets/json/version.json'
+
+# name of app
+export APP_PATH = av
+export COMPOSE_PROJECT_NAME = cartav
+
+# default exposition port, should be overrided in 'artifacts' only
+export PORT=80
+# default elasticsearch settings, should be overrided in 'artifacts' only
+# default elasticsearch is ok for developpement usage, not for production
+export ES_MEM = 512m
+export ES_VERSION = 6.1.2
+export BRANCH=dev
+
+# artifacts including enable overriding of global vars
+dummy		    := $(shell touch artifacts)
+include ./artifacts
+
+export PORT=80
+export APP=cartav
+export APP_ES := ${APP}-elasticsearch
+export COMPOSE_PROJECT_NAME=${APP}
+export APP_PATH := $(shell pwd)
+export APP_VERSION	:= beta # $(shell git describe --tags || cat VERSION )
+export BACKEND=${APP_PATH}/backend
+export FRONTEND=${APP_PATH}/frontend
+export LOGS=${APP_PATH}/log
+export DC_DIR=${APP_PATH}
+export DC_PREFIX=${DC_DIR}/docker-compose
+export USE_TTY := $(shell test -t 1 && USE_TTY="-t")
+export ES_MEM=2048m
+export ES_HOST=elasticsearch
+export MAX_MAP_COUNT=262144
+export API_USER_LIMIT_RATE=1r/m
+export API_USER_BURST=3 nodelay
+export API_USER_SCOPE=http_x_forwarded_for
+export API_GLOBAL_LIMIT_RATE=5r/s
+export API_GLOBAL_BURST=20 nodelay
+
+export datadir=esdata
+export data_remote_dir=. # histovec-data
+export datasets=es5_prod_accidents es5_prod_accidents_vehicules es5_prod_accidents_usagers es5_prod_pve es5_prod_equipements_radar
+export remote_files=es5_prod_accidents es5_prod_accidents_vehicules es5_prod_accidents_usagers es5_prod_pve es5_prod_radars
+
+export ES_CHUNK=5000
+export ES_VERBOSE=100000
+export ES_VERBOSE_UPDATE=1000
+export ES_TIMEOUT=60
+export ES_JOBS=4
+export FROM=1
+export stress=10
+export stress_verbose=1000
+export PASSPHRASE=CHANGEME
+export settings={"index": {"number_of_shards": 1, "refresh_interval": "300s", "number_of_replicas": 0}}
+export mapping={"_all": {"enabled": false}, "dynamic": false, "properties": {"idv": {"type": "keyword"}, "ida1": {"type": "keyword"}, "ida2": {"type": "keyword"}}}
+export index_log=${datadir}/index.log.gz
+
+export mapping_accidents={"_all": {"enabled": false}, "dynamic": false, "properties": { "agg": { "type": "text" }, "date": { "store": "true", "type": "date" }, "col": { "type": "text" }, "pr": { "type": "text" }, "has_deuxrouesmotorises": { "store": "true", "type": "boolean" }, "has_vehiculeautre": { "store": "true", "type": "boolean" }, "lum": { "type": "text" }, "gravite_accident": { "type": "text" }, "original_city_code": { "type": "text" }, "num_route_com_id": { "type": "text" }, "dep": { "type": "text" }, "has_voiture": { "store": "true", "type": "boolean" }, "vehiculeautre_nb": { "store": "true", "type": "long" }, "has_velo": { "store": "true", "type": "boolean" }, "PR_display": { "type": "text" }, "ANNEE": { "store": "true", "type": "long" }, "larrout": { "store": "true", "type": "long" }, "atm": { "type": "text" }, "current_name": { "type": "text" }, "plan": { "type": "text" }, "longitude": { "store": "true", "type": "double" }, "surf": { "type": "text" }, "geo_type": { "type": "text" }, "voie": { "type": "text" }, "SEMAINE": { "store": "true", "type": "long" }, "infra": { "type": "text" }, "poidslourd_nb": { "store": "true", "type": "long" }, "adr": { "type": "text" }, "original_name": { "type": "text" }, "hospitalise_nb": { "store": "true", "type": "long" }, "circ": { "type": "text" }, "heures_minutes": { "type": "text" }, "geo_source_display": { "type": "text" }, "HEURE": { "store": "true", "type": "long" }, "current_city_code": { "type": "text" }, "NOM_REG": { "type": "text" }, "velo_nb": { "store": "true", "type": "long" }, "nbv": { "store": "true", "type": "long" }, "distance": { "store": "true", "type": "double" }, "latitude": { "store": "true", "type": "double" }, "env1": { "type": "text" }, "pietons_nb": { "store": "true", "type": "long" }, "deuxrouesmotorises_nb": { "store": "true", "type": "long" }, "has_pietons": { "store": "true", "type": "boolean" }, "num_route_or_id": { "type": "text" }, "blesseleger_nb": { "store": "true", "type": "long" }, "indemne_nb": { "store": "true", "type": "long" }, "tue_nb": { "store": "true", "type": "long" }, "voiture_nb": { "store": "true", "type": "long" }, "vosp": { "type": "text" }, "situ": { "type": "text" }, "geo_source": { "type": "text" }, "prof": { "type": "text" }, "int": { "type": "text" }, "pr1": { "type": "text" }, "geojson": { "type": "text" }, "Num_Acc": { "type": "text" }, "catr": { "type": "text" }, "geo_score": { "store": "true", "type": "double" }, "has_poidslourd": { "store": "true", "type": "boolean" }, "date_formated": { "type": "text" }, "LIBELLE_JOUR": { "type": "text" }, "nom_circonscription_police": { "type": "text" }, "v1": { "type": "text" }, "v2": { "type": "text" }, "LIBELLE_PLAGE_HORAIRE": { "type": "text" }, "lartpc": { "store": "true", "type": "long" }, "mois": { "store": "true", "type": "long" } }, "date_detection": false}
+export mapping_accidents_usagers={"_all": {"enabled": false}, "dynamic": false, "properties": { "grav": { "type": "text" }, "trajet": { "type": "text" }, "an_nais": { "type": "text" }, "Num_Acc": { "type": "text" }, "catu": { "type": "text" }, "secu": { "type": "text" }, "num_veh": { "type": "text" }, "locp": { "type": "text" }, "actp": { "type": "text" }, "sexe": { "type": "text" }, "place": { "type": "text" }, "etatp": { "type": "text" } }, "date_detection": false}
+export mapping_accidents_vehicules={"_all": {"enabled": false}, "dynamic": false, "properties": { "Num_Acc": { "type": "text" }, "obs": { "type": "text" }, "num_veh": { "type": "text" }, "senc": { "type": "text" }, "choc": { "type": "text" }, "catv": { "type": "text" }, "occutc": { "type": "text" }, "obsm": { "type": "text" }, "manv": { "type": "text" } }, "date_detection": false}
+export mapping_radars={"_all": {"enabled": false}, "dynamic": false, "properties": { "Adresse": { "type": "text" }, "Distance(ETVM)": { "store": "true", "type": "double" }, "Nature voie": { "type": "text" }, "Numéro\ndépartement (PE)": { "store": "true", "type": "long" }, "Organisme vérificateur": { "type": "text" }, "Equipement": { "type": "text" }, "Date arrêt définitif": { "type": "text" }, "Nbr voies contrôlées (PE)": { "store": "true", "type": "long" }, "Catégorie": { "type": "text" }, "Checksum": { "type": "text" }, "Condition prise de vue": { "type": "text" }, "Repère kilométrique (PE)": { "type": "text" }, "Version XSD": { "store": "true", "type": "double" }, "Version Xsd": { "store": "true", "type": "double" }, "Nécessité balisage": { "type": "text" }, "Commune (PS)": { "type": "text" }, "Modèle\ncinémomètre": { "type": "text" }, "Date dernière vérification": { "type": "text" }, "Lot": { "type": "text" }, "Energie\nCoordonnées GPS Logette - longitude": { "type": "text" }, "Sens détection visé": { "type": "text" }, "Texte arrêté PL": { "type": "text" }, "Nombre de voies": { "store": "true", "type": "long" }, "Nbr de panneaux": { "type": "text" }, "Marque": { "type": "text" }, "Date de dépôt du \ncertificat d'installation": { "type": "text" }, "Département (PS)": { "type": "text" }, "Gestionnaire voirie": { "type": "text" }, "N° habitation": { "type": "text" }, "Date infraction dernier MIF": { "type": "text" }, "Date exp. certif\nauthentification": { "type": "text" }, "Télécom\nEtat ligne Réseau": { "type": "text" }, "Energie\nCoordonnées GPS Logette - latitude": { "type": "text" }, "Intersection": { "type": "text" }, "Id Agent": { "type": "text" }, "Date\nDécentralisation": { "type": "text" }, "Date pose cabine": { "type": "text" }, "VLA": { "store": "true", "type": "long" }, "Date d'expiration de la dernière vérification": { "type": "text" }, "Lieu(ETVM)": { "type": "text" }, "Date modification": { "type": "text" }, "Texte arrêté": { "type": "text" }, "Sas vélos": { "type": "text" }, "Titulaire": { "type": "text" }, "Etat": { "type": "text" }, "Code Postal (PE)": { "store": "true", "type": "long" }, "Adresse IP": { "type": "text" }, "Option mât": { "type": "text" }, "Numéro de série": { "type": "text" }, "Code INSEE": { "type": "text" }, "Code INSEE (PE)": { "store": "true", "type": "long" }, "Signataire arrêté": { "type": "text" }, "Type": { "type": "text" }, "Adresse (PE)": { "type": "text" }, "Type de cabine": { "type": "text" }, "Constructeur": { "type": "text" }, "Nature voie (PE)": { "type": "text" }, "Coordonnées GPS cabine - latitude": { "store": "true", "type": "double" }, "Repère kilométrique (PS)": { "type": "text" }, "Télécom\nRéférence contrat": { "type": "text" }, "Date réception dernier MIF": { "type": "text" }, "ET double sens": { "type": "text" }, "Date dernière réfection LEF": { "type": "text" }, "ET discriminant les voies": { "type": "text" }, "Sens détection": { "type": "text" }, "Département (PE)": { "type": "text" }, "Télécom\nCoordonnées GPS Logette - longitude": { "type": "text" }, "Modèle": { "type": "text" }, "Adresse IP ET": { "type": "text" }, "Sens": { "type": "text" }, "Télécom\nNuméro série routeur": { "type": "text" }, "Commune (PE)": { "type": "text" }, "Télécom\nCoordonnées GPS Logette - latitude": { "type": "text" }, "Commune": { "type": "text" }, "Energie\nRéférence client": { "type": "text" }, "Code INSEE (PS)": { "store": "true", "type": "long" }, "Version MIF": { "type": "text" }, "Type de vérification": { "type": "text" }, "Etat Maintenance": { "type": "text" }, "Adresse (PS)": { "type": "text" }, "Sens circulation inverse": { "type": "text" }, "Numéro usine": { "type": "text" }, "Code Postal (PS)": { "store": "true", "type": "long" }, "Catégorie Miffeur": { "type": "text" }, "Date de création": { "type": "text" }, "Axe routier": { "type": "text" }, "Nature voie (PS)": { "type": "text" }, "Sens circulation": { "type": "text" }, "Nom société\ngestionnaire voirie": { "type": "text" }, "Etat fonctionnel": { "type": "text" }, "Environnement de la voie": { "type": "text" }, "Code Postal": { "store": "true", "type": "long" }, "Département": { "type": "text" }, "Date de vérification d'installation": { "type": "text" }, "Phase": { "store": "true", "type": "long" }, "Version logiciel": { "type": "text" }, "Date arrêté": { "type": "text" }, "Date vérification télémètre laser": { "type": "text" }, "Coordonnées GPS cabine - longitude": { "store": "true", "type": "double" }, "Télécom\nNom Routeur": { "type": "text" }, "Pays": { "type": "text" }, "Etape VABF2\nDate fin réalisation": { "type": "text" }, "Marque\ncinémomètre": { "type": "text" }, "Repère kilométrique": { "type": "text" }, "Télécom\nType réseau": { "type": "text" }, "Télécom\nNuméro Tel. ET": { "type": "text" }, "Libellé voie": { "type": "text" }, "Marché": { "type": "text" }, "Emplacement": { "type": "text" }, "Num voies surveillées": { "type": "text" }, "Date de mise en service": { "type": "text" }, "Zone": { "type": "text" }, "departement_num": { "type": "text" }, "Catégories VLA": { "type": "text" }, "Date exp. certif\nchiffrement": { "type": "text" }, "Numéro\ndépartement (PS)": { "store": "true", "type": "long" }, "Télécom\nEtat ligne FT": { "type": "text" }, "Organisme vérificateur de l'installation": { "type": "text" }, "Etat\nDécentralisation": { "type": "text" }, "Référence\ncinémomètre": { "type": "text" }, "Complétude": { "type": "text" }, "Nbr voies contrôlées": { "store": "true", "type": "long" }, "Energie\nPoint de livraison": { "type": "text" }, "VLA PL": { "store": "true", "type": "long" }, "Nbr voies contrôlées (PS)": { "store": "true", "type": "long" } }, "date_detection": false}
+export mapping_pve={"_all": {"enabled": false}, "dynamic": false, "properties": { "DEPARTEMENT_INFRACTION": { "type": "text" }, "ANNEE_INFRACTION": { "store": "true", "type": "long" }, "num_route_com_id": { "type": "text" }, "LIBELLE_TYPE_VOIE_DEDUIT": { "type": "text" }, "LIBELLE_FAMILLE": { "type": "text" }, "LIB_COURT_CORPS": { "type": "text" }, "CODE_INSEE_INFRACTION": { "type": "text" }, "COD_GENRE": { "type": "text" }, "geojson": { "type": "text" }, "LIBELLE_JOUR_INFRACTION": { "type": "text" }, "LIBELLE_UNITE": { "type": "text" }, "num_route_or_id": { "type": "text" }, "LIBELLE_CORPS": { "type": "text" }, "nom_circonscription_police": { "type": "text" }, "LIBELLE_PLAGE_HORAIRE": { "type": "text" }, "DATE_JOUR_REEL_INFRACTION": { "store": "true", "type": "date" }, "NOM_REG": { "type": "text" } }, "date_detection": false}
+
+export OS_AUTH_URL=https://identity.api.pi.dsic.minint.fr/v3
+export OS_PROJECT_NAME=cartavdev-dev-f047-z1
+export OS_PROJECT_ID=373b0504876743f09427f84e4fd8fe9d
+export OS_DOMAIN_NAME=tech
+export OS_USERNAME=dupontla
+export OS_PASSWORD=*ahk4Xee8!
+export OS_TOKEN:=`curl -s -k --request POST --include --header "Content-Type: application/json" --data '{ "auth": { "identity": { "methods": ["password"], "password": { "user": { "domain": { "name": "'$OS_DOMAIN_NAME'" }, "name": "'$OS_USERNAME'", "password": "'$OS_PASSWORD'" } } }, "scope": { "project": { "name": "'$OS_PROJECT_NAME'", "domain": { "name": "'$OS_DOMAIN_NAME'" } } } } }' "$OS_AUTH_URL/auth/tokens" | awk '/X-Subject-Token/ {print $2}'`
+
+export OS_CONTAINER_NAME=cartav-dev
+export OS_SWIFT_URL=https://object-store.api.pi.dsic.minint.fr/v1
+export OS_SWIFT_PATH:=${OS_SWIFT_URL}/AUTH_${OS_PROJECT_ID}/${OS_CONTAINER_NAME}
+
+vm_max_count := $(shell cat /etc/sysctl.conf 2>&1 | egrep vm.max_map_count\s*=\s*262144 && echo true)
+
+dummy               := $(shell touch artifacts)
+include ./artifacts
+
+DC := docker-compose
+
+update:
+	git pull origin ${BRANCH}
+
+clean-docker:
+	docker container rm cartav-build || echo
+	docker image rm cartav-build || echo
+	docker image rm cartav-dev || echo
+
+clean:
+	sudo rm -rf build-dist
+
+download:
+ifeq ("$(wildcard esdata)","")
+	mkdir -p esdata
+endif
+ifeq ("$(wildcard esdata/dev_cartav_1node.tar.gz.gpg)","")
+	wget http://catalog.datalab.mi/s/resources/cartav-jeu-de-developpement-preindexe/20180320-080437/dev_cartav_1node.tar.gz.gpg.zip -O esdata/dev_cartav_1node.tar.gz.gpg
+endif
+
+decrypt: download
+ifeq ("$(wildcard esdata/dev/nodes/0/)","")
+	@echo unpacking sample data
+	@cat esdata/dev_cartav_1node.tar.gz.gpg | gpg -q -d --batch --passphrase "*AH5xieZa!" | sudo tar xzf - -C esdata/
+endif
+
+pre-prod: clean
+	echo "{\"version\": \"pre-prod-$(date)-$(commit)\"}" > $(version-file)
+	#npm run build-pre-prod
+	mkdir -p dist
+	docker-compose -f docker-compose-build-preprod.yml up
+	git reset -- $(version-file)
+
+deploy-pre-prod: pre-prod
+	scp -r dist/* fa-proxy-muserfi:/var/www/demo/francis/dist/test
+
+prod: clean
+	echo "{\"version\": \"prod-$(date)-$(commit)\"}" > $(version-file)
+	# npm run build-production
+	mkdir -p dist
+	docker-compose -f docker-compose-build-production.yml up
+	git reset -- $(version-file)
+deploy-prod: prod
+	scp -r dist/* fa-proxy-muserfi:/var/www/demo/francis/dist
+test: 
+	docker-compose -f docker-compose-run-production.yml up -d
+
+cloud: clean
+	echo "{\"version\": \"cloud-$(date)-$(commit)\"}" > $(version-file)
+	node build/build.js cloud
+	git reset -- $(version-file)
+deploy-cloud: cloud
+	scp -r dist/* cloud-mi:/var/www/html
+
+sync-cloud-es:
+	./sync_elastic_search.sh
+
+# For PI Cloud deployment
+
+install-prerequisites:
+ifeq ("$(wildcard /usr/bin/docker /usr/local/bin/docker)","")
+	@echo "Installing docker-ce"
+	sudo apt-get update
+	sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+	curl -fsSL https://download.docker.com/linux/${ID}/gpg | sudo apt-key add -
+	sudo add-apt-repository "deb https://download.docker.com/linux/ubuntu `lsb_release -cs` stable"
+	sudo apt-get update
+	sudo apt-get install -y docker-ce
+	@(if (id -Gn ${USER} | grep -vc docker); then sudo usermod -aG docker ${USER} ;fi) > /dev/null
+endif
+ifeq ("$(wildcard /usr/bin/gawk /usr/local/bin/gawk)","")
+	@echo "Installing gawk"
+	@sudo apt-get install -y gawk
+endif
+ifeq ("$(wildcard /usr/bin/jq /usr/local/bin/jq)","")
+	@echo "Installing jq"
+	@sudo apt-get install -y jq
+endif
+ifeq ("$(wildcard /usr/bin/parallel /usr/local/bin/parallel)","")
+	@echo "Installing parallel"
+	@sudo apt-get install -y parallel
+endif
+ifeq ("$(wildcard /usr/local/bin/docker-compose)","")
+	@echo "Installing docker-compose"
+	@sudo curl -s -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+	@sudo chmod +x /usr/local/bin/docker-compose
+endif
+
+network-stop:
+	@docker network rm ${APP}
+
+network: install-prerequisites
+	@docker network create ${APP} 2> /dev/null; true
+
+dev:
+	touch nginx-dev.conf
+	docker-compose -f docker-compose-dev.yml up -d
+
+dev-stop:
+	docker-compose -f docker-compose-dev.yml down
+
+frontend-build: clean
+	echo "{\"version\": \"prod-$(date)-$(commit)\"}" > $(version-file)
+	mkdir -p build-dist dist
+	docker container rm cartav-build || echo
+	docker-compose -f docker-compose-build.yml up
+	rsync -avz --delete build-dist/. dist/.
+	git reset -- $(version-file)
+
+down:
+	docker-compose -f docker-compose.yml  down
+up:
+	touch nginx-run.conf
+	docker-compose -f docker-compose.yml up -d
+
+build: frontend-build
+
+frontend: network
+	@${DC} -f ${DC_PREFIX}-run-production.yml up -d 2>&1 | grep -v orphan
+
+vm_max:
+ifeq ("$(vm_max_count)","")
+	@echo updating vm.max_map_count $(vm_max_count) to 262144
+	@if [ `uname -s` = "Darwin" ];then echo detected Darwin;else sudo sysctl -w vm.max_map_count=262144;fi
+endif
+
+elasticsearch: vm_max network
+ifeq ("$(wildcard ${BACKEND}/esdata/)","")
+	@echo creating elasticsearch data directory
+	@mkdir -p ${BACKEND}/esdata
+	@chmod 777 ${BACKEND}/esdata/.
+endif
+	@${DC} -f ${DC_PREFIX}-elasticsearch.yml up -d 2>&1 | grep -v orphan
+
+up: network elasticsearch frontend
+
+elasticsearch-stop:
+	${DC} -f ${DC_PREFIX}-elasticsearch.yml down
+
+wait-elasticsearch: elasticsearch
+	timeout=${ES_TIMEOUT} ; ret=1 ; until [ "$$timeout" -le 0 -o "$$ret" -eq "0"  ] ; do (docker exec -i ${USE_TTY} ${APP}-elasticsearch curl -s --fail -XGET localhost:9200/_cat/indices > /dev/null) ; ret=$$? ; if [ "$$ret" -ne "0" ] ; then echo "waiting for elasticsearch to start $$timeout" ; fi ; ((timeout--)); sleep 1 ; done ; exit $$ret
+
+index-purge: wait-elasticsearch
+	# Unlock then delete all indexes
+	for dataset in ${datasets}; do docker exec ${APP}-elasticsearch curl -s -XPUT localhost:9200/$${dataset}/_settings -H 'content-type:application/json' -d'{"index.blocks.read_only": false}' | sed 's/{"acknowledged":true.*/index '$${dataset}' prepared for deletion\n/;s/.*no such index.*//'; docker exec ${APP}-elasticsearch curl -s -XDELETE localhost:9200/$${dataset} | sed 's/{"acknowledged":true.*/index '$${dataset}' purged\n/;s/.*no such index.*//'; done
+
+wait-index-purge: index-purge
+	# Delete all indexes and return when done
+	for dataset in ${datasets}; do timeout=${ES_TIMEOUT} ; ret=0 ; until [ "$$timeout" -le 1 -o "$$ret" -eq "0"  ] ; do (docker exec -i ${USE_TTY} ${APP}-elasticsearch curl -s --fail -XGET localhost:9200/$${dataset} > /dev/null) ; ret=$$? ; if [ "$$ret" -ne "1" ] ; then echo "waiting for $${dataset} index to be purged - $$timeout" ; fi ; ((timeout--)); sleep 1 ; done ; exit $$ret; done
+
+index-create: wait-index-purge
+	# (Re-)create all indexes and return when ready
+	for dataset in ${datasets}; do docker exec -i ${USE_TTY} ${APP}-elasticsearch curl -s -H "Content-Type: application/json" -XPUT localhost:9200/$${dataset} -d '{"settings": ${settings}, "mappings": { "$${dataset}": ${mapping}}}' | sed 's/{"acknowledged":true.*/index '$${dataset}' created with mapping\n/'; done
+
+wait-index: index-create
+	# Create all indexes and return when ready
+	for dataset in ${datasets}; do timeout=${ES_TIMEOUT} ; ret=1 ; until [ "$$timeout" -le 0 -o "$$ret" -eq "0"  ] ; do (docker exec -i ${USE_TTY} ${APP}-elasticsearch curl -s --fail -XGET localhost:9200/$${dataset} > /dev/null) ; ret=$$? ; if [ "$$ret" -ne "0" ] ; then echo "waiting for $${dataset} index - $$timeout" ; fi ; ((timeout--)); sleep 1 ; done ; exit $$ret; done
+
+index-direct-load: wait-index
+	# Load all indexes directly from Swift container
+	for remote_file in ${remote_files}; do curl -s -k -H "X-Auth-Token: $${OS_TOKEN}" $${OS_SWIFT_PATH}/$${remote_file}.json -o - | awk '{ print "{\"index\": {\"_index\": \"$${remote_file}\"}}\n" $0}' | parallel --block-size 10M -N ${ES_CHUNK} -j${ES_JOBS} --pipe 'docker exec -i ${APP}-elasticsearch curl -s -H "Content-Type: application/json" -XPOST localhost:9200/_bulk --data-binary @-;echo ' | jq -c '.items[]' | awk 'BEGIN{ok=0;ko=0;lastko=""}{if ($$0 ~ "\"result\":\"created\"") { ok++ } else {ko++;lastko=$$0} if (((ok+ko)%${ES_VERBOSE} == 0)) {print strftime("%Y%m%d-%H:%M") " indexed:" ok " rejected:" ko; if (ko>0) {print "last error was : " lastko; lastko="" }}}'; done
+	# Lock all indexes
+	for dataset in ${datasets}; do docker exec -i ${USE_TTY} ${APP}-elasticsearch curl -s -XPUT localhost:9200/$${dataset}/_settings -H 'content-type:application/json' -d'{"index.refresh_interval": "1s", "index.blocks.read_only": true}' | sed 's/{"acknowledged":true.*/index '$${dataset}' locked\n/;s/.*no such index.*//'; done
+
+data: index-direct-load
+
+# Misc
+
+docker-clean: stop
+	docker container rm ${APP}-build-front ${APP}-nginx
+
+frontend-clean:
+	echo cleaning ${APP} frontend npm dist
+	sudo rm -rf ${FRONTEND}/dist
