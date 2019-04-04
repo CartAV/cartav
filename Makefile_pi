@@ -72,7 +72,7 @@ export OS_PROJECT_ID=373b0504876743f09427f84e4fd8fe9d
 export OS_DOMAIN_NAME=tech
 export OS_USERNAME=dupontla
 export OS_PASSWORD=*ahk4Xee8!
-export OS_TOKEN:=`curl -s -k --request POST --include --header "Content-Type: application/json" --data '{ "auth": { "identity": { "methods": ["password"], "password": { "user": { "domain": { "name": "'$OS_DOMAIN_NAME'" }, "name": "'$OS_USERNAME'", "password": "'$OS_PASSWORD'" } } }, "scope": { "project": { "name": "'$OS_PROJECT_NAME'", "domain": { "name": "'$OS_DOMAIN_NAME'" } } } } }' "$OS_AUTH_URL/auth/tokens" | awk '/X-Subject-Token/ {print $2}'`
+export OS_TOKEN := $(shell curl -s -k --request POST --include --header "Content-Type: application/json" --data '{ "auth": { "identity": { "methods": ["password"], "password": { "user": { "domain": { "name": "'${OS_DOMAIN_NAME}'" }, "name": "'$OS_USERNAME'", "password": "'${OS_PASSWORD}'" } } }, "scope": { "project": { "name": "'${OS_PROJECT_NAME}'", "domain": { "name": "'${OS_DOMAIN_NAME}'" } } } } }' "${OS_AUTH_URL}/auth/tokens" | awk '/X-Subject-Token/ {print $2}')
 
 export OS_CONTAINER_NAME=cartav-dev
 export OS_SWIFT_URL=https://object-store.api.pi.dsic.minint.fr/v1
@@ -244,9 +244,9 @@ wait-index: index-create
 
 index-direct-load: wait-index
 	# Load all indexes directly from Swift container
-	for remote_file in ${remote_files}; do curl -s -k -H "X-Auth-Token: $${OS_TOKEN}" $${OS_SWIFT_PATH}/$${remote_file}.json -o - | awk '{ print "{\"index\": {\"_index\": \"$${remote_file}\"}}\n" $0}' | parallel --block-size 10M -N ${ES_CHUNK} -j${ES_JOBS} --pipe 'docker exec -i ${APP}-elasticsearch curl -s -H "Content-Type: application/json" -XPOST localhost:9200/_bulk --data-binary @-;echo ' | jq -c '.items[]' | awk 'BEGIN{ok=0;ko=0;lastko=""}{if ($$0 ~ "\"result\":\"created\"") { ok++ } else {ko++;lastko=$$0} if (((ok+ko)%${ES_VERBOSE} == 0)) {print strftime("%Y%m%d-%H:%M") " indexed:" ok " rejected:" ko; if (ko>0) {print "last error was : " lastko; lastko="" }}}'; done
+	for remote_file in ${remote_files}; do curl -s -k -H "X-Auth-Token: $${OS_TOKEN}" $${OS_SWIFT_PATH}/$${remote_file}.json -o - | awk '{ print "{\"index\": {\"_index\": \"$${remote_file}\"}}\n" $0}' | parallel --block-size 10M -N $${ES_CHUNK} -j$${ES_JOBS} --pipe 'docker exec -i $${USE_TTY} $${APP}-elasticsearch curl -s -H "Content-Type: application/json" -XPOST localhost:9200/_bulk --data-binary @-;echo ' | jq -c '.items[]' | awk 'BEGIN{ok=0;ko=0;lastko=""}{if ($$0 ~ "\"result\":\"created\"") { ok++ } else {ko++;lastko=$$0} if (((ok+ko)%$${ES_VERBOSE} == 0)) {print strftime("%Y%m%d-%H:%M") " indexed:" ok " rejected:" ko; if (ko>0) {print "last error was : " lastko; lastko="" }}}'; done
 	# Lock all indexes
-	for dataset in ${datasets}; do docker exec -i ${USE_TTY} ${APP}-elasticsearch curl -s -XPUT localhost:9200/$${dataset}/_settings -H 'content-type:application/json' -d'{"index.refresh_interval": "1s", "index.blocks.read_only": true}' | sed 's/{"acknowledged":true.*/index '$${dataset}' locked\n/;s/.*no such index.*//'; done
+	for dataset in ${datasets}; do docker exec -i $${USE_TTY} $${APP}-elasticsearch curl -s -XPUT localhost:9200/$${dataset}/_settings -H 'content-type:application/json' -d'{"index.refresh_interval": "1s", "index.blocks.read_only": true}' | sed 's/{"acknowledged":true.*/index '$${dataset}' locked\n/;s/.*no such index.*//'; done
 
 data: index-direct-load
 
