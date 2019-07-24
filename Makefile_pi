@@ -177,8 +177,7 @@ endif
 network-stop:
 	@docker network rm ${APP}
 
-#network: install-prerequisites
-network:
+network: install-prerequisites
 	@docker network create ${APP} 2> /dev/null; true
 
 dev:
