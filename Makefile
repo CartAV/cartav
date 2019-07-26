@@ -59,3 +59,32 @@ up:
 	touch nginx-run.conf
 	docker-compose -f docker-compose.yml up -d
 
+images-dir:
+	if [ ! -d images ] ; then mkdir -p images ; fi
+
+save-images: images-dir elasticsearch-save-image nginx-save-image
+
+elasticsearch-save-image:
+	elasticsearch_image_name=$$(export EXEC_ENV=production && docker-compose -f docker-compose.yml config | python -c 'import sys, yaml, json; json.dump(yaml.load(sys.stdin), sys.stdout, indent=4)' | jq -r .services.esnode1.image) ; \
+	docker image save -o images/cartav-esnode1-image.tar $$elasticsearch_image_name
+
+nginx-save-image:
+	nginx_image_name=$$(export EXEC_ENV=production && docker-compose -f docker-compose.yml config | python -c 'import sys, yaml, json; json.dump(yaml.load(sys.stdin), sys.stdout, indent=4)' | jq -r .services.nginx.image) ; \
+	docker image save -o images/cartav-nginx-image.tar $$nginx_image_name
+
+download-all-images: nginx-download-image elasticsearch-download-image
+
+elasticsearch-download-image:
+
+nginx-download-image:
+
+load-images: images-dir nginx-load-image elasticsearch-load-image
+
+elasticsearch-load-image:
+	docker image load -i images/cartav-esnode1-image.tar
+
+nginx-download-image:
+
+nginx-load-image:
+	docker image load -i images/cartav-nginx-image.tar
+
