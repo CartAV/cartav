@@ -27,6 +27,41 @@ export BRANCH=dev
 dummy		    := $(shell touch artifacts)
 include ./artifacts
 
+install-prerequisites:
+ifeq ("$(wildcard /usr/bin/docker /usr/local/bin/docker)","")
+	@echo "Installing docker-ce"
+	sudo apt-get update
+	sudo apt-get install apt-transport-https ca-certificates ${CURL_CMD} software-properties-common
+	${CURL_CMD}-fsSL https://download.docker.com/linux/${ID}/gpg | sudo apt-key add -
+	sudo add-apt-repository "deb https://download.docker.com/linux/ubuntu `lsb_release -cs` stable"
+	sudo apt-get update
+	sudo apt-get install -y docker-ce
+	@(if (id -Gn ${USER} | grep -vc docker); then sudo usermod -aG docker ${USER} ;fi) > /dev/null
+endif
+ifeq ("$(wildcard /usr/bin/gawk /usr/local/bin/gawk)","")
+	@echo "Installing gawk"
+	@sudo apt-get install -y gawk
+endif
+ifeq ("$(wildcard /usr/bin/jq /usr/local/bin/jq)","")
+	@echo "Installing jq"
+	@sudo apt-get install -y jq
+endif
+ifeq ("$(wildcard /usr/bin/parallel /usr/local/bin/parallel)","")
+	@echo "Installing parallel"
+	@sudo apt-get install -y parallel
+endif
+ifeq ("$(wildcard /usr/local/bin/docker-compose)","")
+	@echo "Installing docker-compose"
+	@sudo ${CURL_CMD}-s -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+	@sudo chmod +x /usr/local/bin/docker-compose
+endif
+
+network-stop:
+	@docker network rm ${APP}
+
+network: install-prerequisites
+	@docker network create ${APP} 2> /dev/null; true
+
 update:
 	git pull origin ${BRANCH}
 
