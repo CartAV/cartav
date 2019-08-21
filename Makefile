@@ -175,6 +175,12 @@ $(DATA_DOWNLOAD_DIR):
 		curl ${OS_CURL_OPTS} -s -H "X-Auth-Token: ${OS_AUTH_TOKEN}" ${OS_SWIFT_URL}/${OS_SWIFT_AUTH}/${OS_SWIFT_CONTAINER}/$${SET}${DATA_MD5_EXT} > ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_MD5_EXT};\
 	done;
 
+data-show-head:
+	@for SET in $(DATA_SETS); do \
+		echo downloading dataset: $${SET};\
+		curl ${OS_CURL_OPTS} -s -H "X-Auth-Token: ${OS_AUTH_TOKEN}" ${OS_SWIFT_URL}/${OS_SWIFT_AUTH}/${OS_SWIFT_CONTAINER}/$${SET}${DATA_FILE_EXT} | head ;\
+	done;
+
 data-check: $(DATA_DOWNLOAD_DIR)
 	@for SET in $(DATA_SETS); do \
 		md5sum ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_FILE_EXT} > /tmp/md5test;\
