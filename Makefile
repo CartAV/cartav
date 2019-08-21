@@ -117,11 +117,19 @@ frontend-build: clean
 	rsync -avz --delete build-dist/. dist/.
 	git reset -- $(version-file)
 
-down: 
-	docker-compose -f docker-compose.yml  down
-up: 
-	touch nginx-run.conf
-	docker-compose -f docker-compose.yml up -d
+down:
+	${DC} -f docker-compose.yml  down
+
+up:
+	@touch nginx-run.conf
+	@echo starting all services in production mode
+	@${DC} -f docker-compose.yml up -d
+
+elasticsearch:
+	@${DC} -f docker-compose.yml up -d ${ES_CONTAINER}
+
+wait-elasticsearch: elasticsearch
+	@timeout=${ES_TIMEOUT} ; ret=1 ; until [ "$$timeout" -le 0 -o "$$ret" -eq "0"  ] ; do (docker exec -i ${USE_TTY} ${COMPOSE_PROJECT_NAME}-${ES_CONTAINER} curl -s --fail -XGET localhost:9200/_cat/indices > /dev/null) ; ret=$$? ; if [ "$$ret" -ne "0" ] ; then echo "waiting for elasticsearch to start $$timeout" ; fi ; ((timeout--)); sleep 1 ; done ; exit $$ret
 
 images-dir:
 	if [ ! -d images ] ; then mkdir -p images ; fi
