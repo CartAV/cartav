@@ -1,0 +1,48 @@
+{
+  "date_detection": false,
+  "_all": {"enabled": false},
+  "properties": {
+    "DEPARTEMENT_INFRACTION": {
+      "type": "keyword"
+    },
+    "NOM_REG": {
+      "type": "keyword"
+    },
+    "CODE_INSEE_INFRACTION": {
+      "type": "keyword"
+    },
+    "ANNEE_INFRACTION": {
+      "type": "keyword"
+    },
+    "LIBELLE_FAMILLE": {
+      "type": "keyword"
+    },
+    "LIBELLE_JOUR_INFRACTION": {
+      "type": "keyword"
+    },
+    "num_route_com_id": {
+      "type": "keyword"
+    },
+    "LIBELLE_CORPS": {
+      "type": "keyword"
+    },
+    "LIBELLE_UNITE": {
+      "type": "keyword"
+    },
+    "COD_GENRE": {
+      "type": "keyword"
+    },
+    "LIBELLE_PLAGE_HORAIRE": {
+      "type": "keyword"
+    },
+    "nom_circonscription_police": {
+      "type": "keyword"
+    },
+    "LIBELLE_TYPE_VOIE_DEDUIT": {
+      "type": "keyword"
+    },
+"DATE_JOUR_REEL_INFRACTION":{
+     "type": "date"
+   }
+  }
+}

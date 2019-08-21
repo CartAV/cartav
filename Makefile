@@ -153,10 +153,49 @@ nginx-download-image:
 load-images: images-dir nginx-load-image elasticsearch-load-image
 
 elasticsearch-load-image:
-	docker image load -i images/cartav-esnode1-image.tar
+	docker image load -i images/${COMPOSE_PROJECT_NAME}-${ES_CONTAINER}-image.tar
 
 nginx-download-image:
 
 nginx-load-image:
-	docker image load -i images/cartav-nginx-image.tar
+	docker image load -i images/${COMPOSE_PROJECT_NAME}-${NGINX_CONTAINER}-image.tar
 
+data-list:
+	@curl ${OS_CURL_OPTS} -s -H "X-Auth-Token: ${OS_AUTH_TOKEN}" ${OS_SWIFT_URL}/${OS_SWIFT_AUTH}/${OS_SWIFT_CONTAINER}/ | egrep '${DATA_PATTERN}'
+
+data-download-clean:
+	@rm -rf $(DATA_DOWNLOAD_DIR)
+
+$(DATA_DOWNLOAD_DIR):
+	@mkdir -p $(DATA_DOWNLOAD_DIR)
+	@for SET in $(DATA_SETS); do \
+		echo downloading dataset: $${SET};\
+		curl ${OS_CURL_OPTS} -s -H "X-Auth-Token: ${OS_AUTH_TOKEN}" ${OS_SWIFT_URL}/${OS_SWIFT_AUTH}/${OS_SWIFT_CONTAINER}/$${SET}${DATA_FILE_EXT} | head > ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_FILE_EXT};\
+		curl ${OS_CURL_OPTS} -s -H "X-Auth-Token: ${OS_AUTH_TOKEN}" ${OS_SWIFT_URL}/${OS_SWIFT_AUTH}/${OS_SWIFT_CONTAINER}/$${SET}${DATA_SCHEMA_EXT} | head > ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_SCHEMA_EXT};\
+		curl ${OS_CURL_OPTS} -s -H "X-Auth-Token: ${OS_AUTH_TOKEN}" ${OS_SWIFT_URL}/${OS_SWIFT_AUTH}/${OS_SWIFT_CONTAINER}/$${SET}${DATA_MD5_EXT} | head > ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_MD5_EXT};\
+	done;
+
+data-check: $(DATA_DOWNLOAD_DIR)
+	@for SET in $(DATA_SETS); do \
+		md5sum ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_FILE_EXT} > /tmp/md5test;\
+		diff -wb /tmp/md5test ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_MD5_EXT} || exit 1;\
+	done;
+
+data-index-purge: wait-elasticsearch
+	@for SET in $(DATA_SETS); do \
+		docker exec ${COMPOSE_PROJECT_NAME}-${ES_CONTAINER} curl -s -XPUT localhost:9200/$${SET}/_settings -H 'content-type:application/json' -d'{"index.blocks.read_only": false}' | sed 's/{"acknowledged":true.*/'"$${SET}"' index prepared for deletion\n/;s/.*no such index.*//';\
+		docker exec ${COMPOSE_PROJECT_NAME}-${ES_CONTAINER} curl -s -XDELETE localhost:9200/$${SET} | sed 's/{"acknowledged":true.*/'"$${SET}"' index purged\n/;s/.*no such index.*//';\
+		timeout=${ES_TIMEOUT} ; ret=0 ; until [ "$$timeout" -le 1 -o "$$ret" -eq "0"  ] ; do (docker exec -i ${USE_TTY} ${COMPOSE_PROJECT_NAME}-${ES_CONTAINER} curl -s --fail -XGET localhost:9200/$${SET} > /dev/null) ; ret=$$? ; if [ "$$ret" -ne "1" ] ; then echo "waiting for $${SET} index to be purged - $$timeout" ; fi ; ((timeout--)); sleep 1 ; done ; \
+		if [ "$$ret" -ne "0" ]; then exit $$ret; fi;\
+	done;
+
+
+data-index-create: data-index-purge
+	@for SET in $(DATA_SETS); do \
+    if [ -f "${ES_MAPPINGS}/$${SET}.json" ]; then\
+			mapping=`cat ${ES_MAPPINGS}/$${SET}.json | tr '\n' ' '`;\
+			docker exec -i ${USE_TTY} ${COMPOSE_PROJECT_NAME}-${ES_CONTAINER} curl -s -H "Content-Type: application/json" -XPUT localhost:9200/$${SET} -d '{"settings": ${ES_SETTINGS}, "mappings": { "'"$${SET}"'": '"$${mapping}"'}}' | sed 's/{"acknowledged":true.*/'"$${SET}"' index created with mapping\n/';\
+		else \
+			docker exec -i ${USE_TTY} ${COMPOSE_PROJECT_NAME}-${ES_CONTAINER} curl -s -H "Content-Type: application/json" -XPUT localhost:9200/$${SET} | sed 's/{"acknowledged":true.*/'"$${SET}"' index created without mapping\n/';\
+		fi;\
+	done;
