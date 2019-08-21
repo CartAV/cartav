@@ -21,6 +21,16 @@ export PORT=80
 # default elasticsearch is ok for developpement usage, not for production
 export ES_MEM = 512m
 export ES_VERSION = 6.1.2
+export ES_CHUNK=5000
+export ES_VERBOSE=100000
+export ES_VERBOSE_UPDATE=1000
+export ES_TIMEOUT=30
+export ES_JOBS=4
+export ES_CONTAINER=esnode1
+export ES_MAPPINGS=mappings
+export ES_SETTINGS={"index": {"number_of_shards": 1, "refresh_interval": "300s", "number_of_replicas": 0}}
+export NGINX_CONTAINER=nginx
+
 export BRANCH=dev
 
 # artifacts including enable overriding of global vars
