@@ -36,7 +36,11 @@ export ES_TIMEOUT=30
 export ES_JOBS=4
 export ES_CONTAINER=esnode1
 export ES_MAPPINGS=mappings
+export ES_DATA=esdata
 export ES_SETTINGS={"index": {"number_of_shards": 1, "refresh_interval": "300s", "number_of_replicas": 0}}
+export ES_MAX_MAP_COUNT=262144
+export HOST_VM_MAX_COUNT:=$(shell cat /etc/sysctl.conf 2>&1 | egrep vm.max_map_count\s*=\s*262144 && echo true)
+
 export NGINX_CONTAINER=nginx
 
 export BRANCH=dev
@@ -153,7 +157,18 @@ up:
 	@echo starting all services in production mode
 	@${DC} -f docker-compose.yml up -d
 
-elasticsearch:
+vm_max:
+ifeq ("$(HOST_VM_MAX_COUNT)", "")
+		@if [ ${uname_S} == "Darwin" ]; \
+		then \
+			echo "WARNING: detected Darwin - vm.map_max_count=${ES_MAX_MAP_COUNT} settings can't be checked and correctly set. You should set it manually within your Docker virtual machine. This setting has to be set for elasticsearch."; \
+		else \
+			sudo sysctl -w vm.max_map_count=${ES_MAX_MAP_COUNT};\
+		fi
+endif
+
+elasticsearch: install-prerequisites vm_max
+	@sudo mkdir -p ${ES_DATA} && sudo chmod 775 ${ES_DATA}/.
 	@${DC} -f docker-compose.yml up -d ${ES_CONTAINER}
 
 wait-elasticsearch: elasticsearch
