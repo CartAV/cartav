@@ -253,8 +253,9 @@ data-index-create: data-index-purge
 
 data-index-load: data-check data-index-create
 	@for SET in $(DATA_SETS); do \
-		zcat ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_FILE_EXT} |\
-			awk 'BEGIN{n = 1;print "inject $${SET} to elasticsearch" > "/dev/stderr";}{print "{\"index\": {\"_index\": \"'"$${SET}"'\", \"_type\": \"'"$${SET}"'\"}}\n"};print;if ((n%${ES_VERBOSE})==0) {print "read " n " lines" > "/dev/stderr";} n++}' | \
-			parallel --block-size 10M -N ${ES_CHUNK} -j${ES_JOBS} --pipe 'docker exec -i ${COMPOSE_PROJECT_NAME}-${ES_CONTAINER} curl -s -H "Content-Type: application/json" localhost:9200/_bulk  --data-binary @-;echo '; \
+		zcat ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_FILE_EXT} | head -100 |\
+			awk 'BEGIN{n = 1;print "inject '$${SET}' to elasticsearch" > "/dev/stderr";}{print "{\"index\": {\"_index\": \"'"$${SET}"'\", \"_type\": \"'"$${SET}"'\"}}";print;if ((n%${ES_VERBOSE})==0) {print "read " n " lines" > "/dev/stderr";} n++}' | \
+			parallel --block-size 10M -N ${ES_CHUNK} -j${ES_JOBS} --pipe 'docker exec -i ${COMPOSE_PROJECT_NAME}-${ES_CONTAINER} curl -s -H "Content-Type: application/json" localhost:9200/_bulk  --data-binary @-;echo ' | \
+			jq -c '.items[]' | awk 'BEGIN{ok=0;ko=0;lastko=""}{if ($$0 ~ "\"result\":\"created\"") { ok++ } else {ko++;lastko=$$0} if (((ok+ko)%${ES_VERBOSE} == 0)) {print strftime("%Y%m%d-%H:%M") " indexed:" ok " rejected:" ko; if (ko>0) {print "last error was : " lastko; lastko="" }}}END{print strftime("%Y%m%d-%H:%M") " '$${SET}' indexation finished - total indexed:" ok " rejected:" ko ;}';\
 	done;
 
