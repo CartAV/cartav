@@ -33,6 +33,20 @@ export NGINX_CONTAINER=nginx
 
 export BRANCH=dev
 
+export OS_DELAY=5
+export OS_TIMEOUT=10
+export OS_RETRY=10
+export OS_CURL_OPTS=-k --retry ${OS_RETRY} --retry-delay ${OS_DELAY} --connect-timeout ${OS_TIMEOUT} --fail
+
+export DATA_PATTERN=json
+export DATA_SETS=communes radars acc acc_usagers acc_vehicules pve
+export DATA_FILE_EXT=.json.gz
+export DATA_SCHEMA_EXT=_schema.json
+export DATA_MD5_EXT=.json.gz.md5
+export DATA_DOWNLOAD_DIR=data-download
+
+export DC=/usr/local/bin/docker-compose
+
 # artifacts including enable overriding of global vars
 dummy		    := $(shell touch artifacts)
 include ./artifacts
