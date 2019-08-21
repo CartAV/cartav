@@ -198,4 +198,6 @@ data-index-create: data-index-purge
 		else \
 			docker exec -i ${USE_TTY} ${COMPOSE_PROJECT_NAME}-${ES_CONTAINER} curl -s -H "Content-Type: application/json" -XPUT localhost:9200/$${SET} | sed 's/{"acknowledged":true.*/'"$${SET}"' index created without mapping\n/';\
 		fi;\
+		timeout=${ES_TIMEOUT} ; ret=1 ; until [ "$$timeout" -le 0 -o "$$ret" -eq "0"  ] ; do (docker exec -i ${USE_TTY} ${COMPOSE_PROJECT_NAME}-${ES_CONTAINER} curl -s --fail -XGET localhost:9200/$${SET} > /dev/null) ; ret=$$? ; if [ "$$ret" -ne "0" ] ; then echo "waiting for $${SET} index - $$timeout" ; fi ; ((timeout--)); sleep 1 ; done ; \
+		if [ "$$ret" -ne "0" ]; then exit $$ret; fi;\
 	done;
