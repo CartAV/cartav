@@ -11,6 +11,14 @@ commit       := $(shell git rev-parse HEAD | cut -c1-8)
 date         := $(shell date -I)
 version-file := 'src/assets/json/version.json'
 
+ifeq ($(uname_S),Linux)
+    INSTALL := sudo apt-get install -y
+else
+    INSTALL := brew install
+endif
+
+export USE_TTY := $(shell test -t 1 && USE_TTY="-t")
+
 # name of app
 export APP_PATH = av
 export COMPOSE_PROJECT_NAME = cartav
@@ -81,6 +89,26 @@ ifeq ("$(wildcard /usr/local/bin/docker-compose)","")
 	@echo "Installing docker-compose"
 	@sudo ${CURL_CMD}-s -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 	@sudo chmod +x /usr/local/bin/docker-compose
+endif
+ifeq ("$(wildcard /usr/bin/sha1sum /usr/local/bin/sha1sum)","")
+        @echo installing sha1sum with ${INSTALL}, as needed for building targets
+        @${INSTALL} md5sha1sum
+endif
+
+
+install-prerequisites-injection:
+ifeq ("$(wildcard /usr/bin/gawk /usr/local/bin/gawk)","")
+	@echo installing gawk with ${INSTALL}, as needed for data injection
+	@${INSTALL} gawk
+endif
+
+ifeq ("$(wildcard /usr/bin/jq /usr/local/bin/jq)","")
+	@echo installing jq with ${INSTALL}, as needed for data injection
+	@${INSTALL} jq
+endif
+ifeq ("$(wildcard /usr/bin/parallel /usr/local/bin/parallel)","")
+	@echo installing parallel with ${INSTALL}, as needed for data injection
+	@${INSTALL} parallel
 endif
 
 network-stop:
