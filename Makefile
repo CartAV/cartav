@@ -51,6 +51,9 @@ export DC=/usr/local/bin/docker-compose
 dummy		    := $(shell touch artifacts)
 include ./artifacts
 
+# activate token when a pwd is present in artifact, for swift interaction (data source)
+export OS_AUTH_TOKEN:=$(shell [ ! -z "$(OS_PASSWORD)" ] && curl ${OS_CURL_OPTS} -s -D - -L -H "Content-Type: application/json" -d '{ "auth": { "identity": { "methods": ["password"], "password": { "user": { "name": "'$(OS_USER)'", "domain": { "name": "'$(OS_DOMAIN)'" }, "password": "'$(OS_PASSWORD)'" } } } } }' ${OS_AUTH_URL}/auth/tokens  | grep X-Subject-Token | sed 's/X-Subject-Token:\s*//; s/\r//')
+
 install-prerequisites:
 ifeq ("$(wildcard /usr/bin/docker /usr/local/bin/docker)","")
 	@echo "Installing docker-ce"
