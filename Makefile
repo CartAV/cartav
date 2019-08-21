@@ -227,7 +227,7 @@ data-show-head:
 data-check: $(DATA_DOWNLOAD_DIR)
 	@for SET in $(DATA_SETS); do \
 		md5sum ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_FILE_EXT} | sed 's|${DATA_DOWNLOAD_DIR}/||' > /tmp/md5test;\
-		diff -wb /tmp/md5test ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_MD5_EXT} || exit 1;\
+		(diff -wb /tmp/md5test ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_MD5_EXT} && echo $${SET} checked after swift download ) || (echo $${SET} has wrong md5 && exit 1);\
 	done;
 
 data-index-purge: wait-elasticsearch
