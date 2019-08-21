@@ -207,3 +207,11 @@ data-index-create: data-index-purge
 		timeout=${ES_TIMEOUT} ; ret=1 ; until [ "$$timeout" -le 0 -o "$$ret" -eq "0"  ] ; do (docker exec -i ${USE_TTY} ${COMPOSE_PROJECT_NAME}-${ES_CONTAINER} curl -s --fail -XGET localhost:9200/$${SET} > /dev/null) ; ret=$$? ; if [ "$$ret" -ne "0" ] ; then echo "waiting for $${SET} index - $$timeout" ; fi ; ((timeout--)); sleep 1 ; done ; \
 		if [ "$$ret" -ne "0" ]; then exit $$ret; fi;\
 	done;
+
+data-index-load: data-check data-index-create
+	@for SET in $(DATA_SETS); do \
+		zcat ${DATA_DOWNLOAD_DIR}/$${SET}${DATA_FILE_EXT} |\
+			awk 'BEGIN{n = 1;print "inject $${SET} to elasticsearch" > "/dev/stderr";}{print "{\"index\": {\"_index\": \"'"$${SET}"'\", \"_type\": \"'"$${SET}"'\"}}\n"};print;if ((n%${ES_VERBOSE})==0) {print "read " n " lines" > "/dev/stderr";} n++}' | \
+			parallel --block-size 10M -N ${ES_CHUNK} -j${ES_JOBS} --pipe 'docker exec -i ${COMPOSE_PROJECT_NAME}-${ES_CONTAINER} curl -s -H "Content-Type: application/json" localhost:9200/_bulk  --data-binary @-;echo '; \
+	done;
+
