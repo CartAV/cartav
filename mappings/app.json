@@ -1,0 +1,75 @@
+{
+  "date_detection": false,
+  "_all": {"enabled": false},
+  "properties": {
+    "gravite_accident": {
+      "type": "keyword"
+    },
+    "col": {
+      "type": "keyword"
+    },
+    "lum": {
+      "type": "keyword"
+    },
+    "int": {
+      "type": "keyword"
+    },
+    "LIBELLE_PLAGE_HORAIRE": {
+      "type": "keyword"
+    },
+    "ANNEE": {
+      "type": "keyword"
+    },
+    "atm": {
+      "type": "keyword"
+    },
+    "LIBELLE_JOUR": {
+      "type": "keyword"
+    },
+    "NOM_REG": {
+      "type": "keyword"
+    },
+    "dep": {
+      "type": "keyword"
+    },
+    "current_city_code": {
+      "type": "keyword"
+    },
+    "agg": {
+      "type": "keyword"
+    },
+    "num_route_com_id": {
+      "type": "keyword"
+    },
+    "Num_Acc": {
+      "type": "keyword"
+    },
+    "has_voiture": {
+      "type": "keyword"
+    },
+    "has_deuxrouesmotorises": {
+      "type": "keyword"
+    },
+    "has_velo": {
+      "type": "keyword"
+    },
+    "has_poidslourd": {
+      "type": "keyword"
+    },
+    "has_pietons": {
+      "type": "keyword"
+    },
+    "has_vehiculeautre": {
+      "type": "keyword"
+    },
+    "catr": {
+      "type": "keyword"
+    },
+    "nom_circonscription_police": {
+      "type": "keyword"
+    },
+   "date":{
+     "type": "date"
+   }
+  }
+}

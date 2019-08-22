@@ -1,0 +1,62 @@
+{
+  "date_detection": false,
+  "properties": {
+    "st_asgeojson": {
+      "type": "text"
+    },
+    "the_geom": {
+      "type": "text"
+    },
+    "Z_MOYEN": {
+      "type": "text"
+    },
+    "CODE_REG": {
+      "type": "text"
+    },
+    "STATUT": {
+      "type": "text"
+    },
+    "X_CHF_LIEU": {
+      "type": "text"
+    },
+    "CODE_COM": {
+      "type": "text"
+    },
+    "ID_GEOFLA": {
+      "type": "text"
+    },
+    "INSEE_COM": {
+      "type": "text"
+    },
+    "Y_CHF_LIEU": {
+      "type": "text"
+    },
+    "CODE_ARR": {
+      "type": "text"
+    },
+    "NOM_DEPT": {
+      "type": "text"
+    },
+    "CODE_DEPT": {
+      "type": "keyword"
+    },
+    "NOM_REG": {
+      "type": "text"
+    },
+    "Y_CENTROID": {
+      "type": "text"
+    },
+    "X_CENTROID": {
+      "type": "text"
+    },
+    "POPULATION": {
+      "type": "text"
+    },
+    "SUPERFICIE": {
+      "type": "text"
+    },
+    "NOM_COM": {
+      "type": "text"
+    }
+  }
+}

@@ -28,4 +28,4 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - ./esdata:/usr/share/elasticsearch/data
+      - ./${ES_DATA}:/usr/share/elasticsearch/data
