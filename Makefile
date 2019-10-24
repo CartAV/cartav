@@ -259,3 +259,6 @@ data-index-load: data-check data-index-create
 			jq -c '.items[]' | awk 'BEGIN{ok=0;ko=0;lastko=""}{if ($$0 ~ "\"result\":\"created\"") { ok++ } else {ko++;lastko=$$0} if (((ok+ko)%${ES_VERBOSE} == 0)) {print strftime("%Y%m%d-%H:%M") " '$${SET}' - indexed:" ok " rejected:" ko; if (ko>0) {print "last error was : " lastko; lastko="" }}}END{print strftime("%Y%m%d-%H:%M") " '$${SET}' indexation finished - total indexed:" ok " rejected:" ko ;}';\
 	done;
 
+data-cronjob:
+	@echo installing cron in /etc/cron.d
+	@echo "30 7 * * * ${USER} /usr/bin/make -C /home/${USER}/cartav data-download-clean data-download data-index-load | /usr/bin/logger -t cartav_load" | sudo tee /etc/cron.d/${APP_PATH}
