@@ -29,3 +29,9 @@ services:
         hard: -1
     volumes:
       - ./${ES_DATA}:/usr/share/elasticsearch/data
+
+
+networks:
+  default:
+    external:
+      name: ${APP}

@@ -20,6 +20,7 @@ endif
 export USE_TTY := $(shell test -t 1 && USE_TTY="-t")
 
 # name of app
+export APP = cartav
 export APP_PATH = av
 export COMPOSE_PROJECT_NAME = cartav
 
@@ -119,7 +120,7 @@ network-stop:
 	@docker network rm ${APP}
 
 network: install-prerequisites
-	@docker network create ${APP} 2> /dev/null; true
+	@docker network create --opt com.docker.network.driver.mtu=1450 ${APP} 2> /dev/null; true
 
 update:
 	git pull origin ${BRANCH}
@@ -152,7 +153,7 @@ frontend-build: clean
 down:
 	${DC} -f docker-compose.yml  down
 
-up:
+up: network
 	@touch nginx-run.conf
 	@echo starting all services in production mode
 	@${DC} -f docker-compose.yml up -d

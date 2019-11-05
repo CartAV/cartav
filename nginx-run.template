@@ -62,3 +62,4 @@ proxy_cache_path /home levels=1:2 keys_zone=es:10m max_size=10g
      }
   }
 
+# vim:filetype=nginx
