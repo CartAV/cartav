@@ -10,3 +10,4 @@ selenium-debug.log
 artifacts
 nginx-run.conf
 nginx-dev.conf
+htpasswd.av.users
