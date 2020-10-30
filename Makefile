@@ -90,7 +90,7 @@ ifeq ("$(wildcard /usr/bin/parallel /usr/local/bin/parallel)","")
 	@echo "Installing parallel"
 	@sudo apt-get install -y parallel
 endif
-ifeq ("$(wildcard /usr/local/bin/docker-compose)","")
+ifeq ("$(wildcard /usr/bin/docker-compose /usr/local/bin/docker-compose)","")
 	@echo "Installing docker-compose"
 	@sudo ${CURL_CMD}-s -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 	@sudo chmod +x /usr/local/bin/docker-compose
@@ -134,7 +134,7 @@ clean:
 	sudo rm -rf build-dist
 
 dev:
-	@touch nginx-dev.conf
+	@touch nginx/nginx-dev.conf
 	@echo starting dev mode
 	@${DC} -f docker-compose-dev.yml up -d
 
@@ -154,7 +154,7 @@ down:
 	${DC} -f docker-compose.yml  down
 
 up: network
-	@touch nginx-run.conf
+	@touch nginx/nginx-run.conf
 	@echo starting all services in production mode
 	@${DC} -f docker-compose.yml up -d
 
