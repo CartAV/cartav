@@ -11,7 +11,7 @@ upstream node {
 }
 
 server {
-    listen 80 default_server;
+    listen ${PORT} default_server;
 
     location / {
         proxy_pass http://node;
@@ -19,7 +19,7 @@ server {
     }
 
     # elasticsearch API (only used for validation / should be proxied from the backend in the future)
-    location ~ /<APP_PATH>/api/v0/.*/(_search|_msearch|_update).* {
+    location ~ /${APP_PATH}/api/v0/.*/(_search|_msearch|_update).* {
         # Deny Nodes Shutdown API
         if ($request_filename ~ "_shutdown") {
             return 403;
@@ -36,7 +36,7 @@ server {
         }      
 
         # Pass requests to ElasticSearch
-        rewrite "^/<APP_PATH>/api/v0/(.*)$" /$1 break;
+        rewrite "^/${APP_PATH}/api/v0/(.*)$" /$1 break;
         proxy_cache es;
         proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504;
         proxy_pass http://elasticsearch;

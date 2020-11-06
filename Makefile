@@ -134,7 +134,6 @@ clean:
 	sudo rm -rf build-dist
 
 dev:
-	@touch nginx/nginx-dev.conf
 	@echo starting dev mode
 	@${DC} -f docker-compose-dev.yml up -d
 
@@ -154,7 +153,6 @@ down:
 	${DC} -f docker-compose.yml  down
 
 up: network
-	@touch nginx/nginx-run.conf
 	@echo starting all services in production mode
 	@${DC} -f docker-compose.yml up -d
 

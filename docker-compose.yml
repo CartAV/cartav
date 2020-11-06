@@ -6,13 +6,13 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}-nginx
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/nginx-run.template:/etc/nginx/conf.d/default.template
+      - ./nginx/nginx-run.template:/etc/nginx/templates/default.conf.template
       - ./dist:/usr/share/nginx/html
-    command: /bin/bash -c '(sed "s|<APP_PATH>|${APP_PATH}|g;" < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf) && nginx -g "daemon off;"' 
     environment:
-      - APP_PATH:${APP_PATH}
+      - APP_PATH=${APP_PATH}
+      - PORT=${PORT}
     ports:
-      - "${PORT}:80"
+      - ${PORT}:${PORT}
     restart: always
 
   esnode1:

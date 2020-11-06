@@ -6,10 +6,12 @@ services:
     container_name: cartav-nginx
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/nginx-dev.template:/etc/nginx/conf.d/default.template
-    command: /bin/bash -c '(sed "s|<APP_PATH>|${APP_PATH}|g;" < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf) && nginx -g "daemon off;"' 
+      - ./nginx/nginx-dev.template:/etc/nginx/templates/default.conf.template
+    environment:
+      - APP_PATH=${APP_PATH}
+      - PORT=${PORT}
     ports:
-      - "${PORT}:80"
+      - ${PORT}:${PORT}
     restart: always
 
 

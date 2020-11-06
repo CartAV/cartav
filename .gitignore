@@ -8,6 +8,4 @@ test/unit/coverage
 test/e2e/reports
 selenium-debug.log
 artifacts
-nginx-run.conf
-nginx-dev.conf
 htpasswd.av.users
