@@ -1,0 +1,23 @@
+---
+name: Publish doc
+
+on:
+  push:
+    # Sequence of patterns matched against refs/heads
+    branches:    
+      - '**'         # Push events on all branchs
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: 🚀 Deploy to GitHub pages
+        if: github.ref == 'refs/heads/dev'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./static/doc
+          force_orphan: true
