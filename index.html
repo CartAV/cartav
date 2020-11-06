@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>Cartographie accidents et verbalisation</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='vendor/showdown.min.js'></script>
+  <link rel="stylesheet" href="vendor/bulma.min.css" />
+  <style>
+    video img {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header class="hero is-primary">
+    <div class="hero-body">
+      <h1 class="title is-1 has-text-centered">Cartographie accidents et verbalisation</h1>
+    </div>
+  </header>
+
+
+  <section class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns">
+          <div class="content column md">
+![CARTAV](../cartav.svg)
+
+Cet outil d’aide à la décision permet de cartographier les accidents et les verbalisations afin d’aider les forces
+de l’ordre à mieux cibler leurs actions.
+
+## Accès au prototype
+
+L’accès est possible à [cette adresse](../../).
+
+Il est indispensable d’avoir le navigateur Firefox à jour.
+C’est à dire au moins la version courante au sein du ministère de l’Intérieur
+(avril 2016) : [Firefox 45](http://dsic.minint.fr/index.php/poste-de-travail/mise-a-jour-des-postes/liste-des-logiciels/2931-firefox-45).
+
+## Contacts
+
+Les développeurs ne travaillent plus pour le ministère mais peuvent néanmoins être contactés directement :
+
+* `fchabouis@gmail.com`
+* `tristramg@gmail.com`
+
+Les contacts au sein du ministère sont :
+
+* `daniel.ansellem@interieur.gouv.fr`
+* `fabien.antoine@interieur.gouv.fr`
+* `laurent.dupont2@interieur.gouv.fr`
+
+Le code source du projet est publié sur github à cette [adresse](https://github.com/CartAV/cartav), c'est un bon endroit pour y faire remonter les bugs et les remarques.
+
+## Source des données
+
+* Accidents : base des accidents corporels (BAAC)
+* Verbalisation : base PVE (PV électronique)
+* Découpage administratif : données ouvertes IGN
+* Linéaire de voirie : OpenStreetMap
+* Fond de carte : OpenStreetMap
+
+## Contexte du prototype
+
+Ce projet a été réalisé dans le cadre des [Entrepreneurs d’Intérêt Général](http://www.gouvernement.fr/entrepreneur-interet-general)
+
+## Contenu de l'aide
+* [Modifier les métriques](#section1)
+* [S’intéresser à une zone précise](#section2)
+* [Voir par commune](#section3)
+* [Circonscriptions de Police](#section4)
+* [Filtrer les données](#section5)
+* [S’intéresser à la verbalisation](#section6)
+* [Partager & Imprimer](#section7)
+          </div>
+          <div class='column is-half'>
+            <img src="accueil.png" alt="Écran d’accueil">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<hr>
+
+  <section id="section1" class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns">
+          <div class="content column md">
+# Modifier les métriques
+
+Lorsque la vue représente une zone géographique, chaque aire est colorée selon une métrique au choix.
+
+Il est possible de sélectionner le ratio arbitrairement grace au menu de configuration à gauche.
+
+Par exemple pour afficher le nombre d’accident par habitants.
+
+Si une autre métrique vous semble intéressante, n’hésitez pas à nous contacter.
+        </div>
+        <div class="column">
+          <video src="casts/metriques.webm" autoplay loop>Vidéo de modification des métriques.</video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<hr>
+
+  <section id="section2" class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns">
+          <div class="subtitle content column md">
+# S’intéresser à une zone précise
+
+Par défaut, le territoire est découpé par régions.
+
+Cliquer sur une région permet de descendre au niveau départemental.
+
+Cliquer sur un département permet de cartographier les accidents de 3 manières différentes :
+
+* En nuage de point, éventuellement aggrégés,
+* En carte de chaleur,
+* Le long des axes.
+
+En cliquant sur un axe, il est possible de voir chaque accident individuel.
+
+Enfin, un clic sur un accident permet d’en voir les détails.
+
+Note technique : les axes sont découpés par commune. Ainsi une autoroute sera composé d’autant de tronçons que de commune qu’elle traverse.
+        </div>
+        <div class="column is-half">
+          <video src="casts/navigation.webm" autoplay loop>Vidéo de navigation dans les différents niveaux.</video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<hr>
+
+  <section id="section3" class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns">
+          <div class="content column md">
+# Voir par commune
+
+En cliquant sur un département, on peut directement observer tous les accidents et verbalisations
+du département.
+
+Si vous souhaitez vous concentrer sur une commune en particulier, effectuez un clic-droit pour
+demander à voir toutes les communes du département.
+        </div>
+        <div class="column is-half">
+          <video src="casts/commune.webm" autoplay loop>Vidéo de la vue par communes.</video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<hr>
+
+  <section id="section4" class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns">
+          <div class="content column md">
+# Circonscriptions de Police
+
+Il est possible d’explorer les données par circonscription de police.
+
+Pour cela il faut aller sur
+[la page dédiée](../../#/carte/circonscriptions).
+
+Choisissez la circonscription soit en cliquant, soit en
+utilisant le champ de recherche.
+
+Astuce : vous pouvez copier l’adresse de la vue d’une circonscription pour
+l’envoyer à quelqu’un d’autre ou encore la mettre en favori.
+
+Enfin, vous pouvez également choisir la verbalisations de certains services
+uniquement.
+        </div>
+        <div class="column is-half">
+          <video src="casts/circo.webm" autoplay loop>Vidéo d'accès aux circonscriptions de Police.</video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<hr>
+
+  <section id="section5" class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns">
+          <div class="content column md">
+# Filtrer les données
+
+Trois onglets permettent de sélectionner :
+
+* Les critères temporels qui s'appliquent à la fois aux accidents et à la verbalisation ; 
+* Les caractéristiques des accidents ;
+* Les caractéristiques des PVEs.
+
+Ainsi, il est par exemple possible de s’intéresser aux accidents graves impliquant des voitures et des piétons sur 5 années.
+
+Le petit lien `seul` permet de choisir une seule valeur, sans avoir à décocher les autres valeurs.
+
+Au dessus de chaque rubrique, il est possible de cocher ou décocher toutes les cases.
+        </div>
+        <div class="column is-half">
+          <video src="casts/filtres.webm" autoplay loop>Vidéo de l'utilisation des filtres de données.</video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<hr>
+
+  <section id="section6" class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns">
+          <div class="content column md">
+# S’intéresser à la verbalisation
+
+Au lieu d’indiquer les accidents, il est possible d’afficher la verbalisation.
+
+De même que pour les accidents, de nombreux filtres permettent de se concentrer sur
+une certaine typologie.
+
+Enfin, il est possible d’identifier des axes
+où il n’y a pas eu de verbalisation mais des accidents et réciproquement.
+
+Seuls les PV électroniques sont pris en compte. En particulier nous ne disposons pas
+les contrôles automatisés, ni les données délictuelles.
+        </div>
+        <div class="column is-half">
+          <video src="casts/verbalisation.webm" autoplay loop>Vidéo de la visualisation des données de verbalisation.</video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<hr>
+
+  <section id="section7" class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns">
+          <div class="content column md">
+# Partager
+
+Il est possible de partager une vue particulière (c'est à dire sa localisation, ses données représentées et ses filtres) en copiant l'adresse URL de la carte à tout moment.
+
+Il est possible d'enregistrer des vues favorites en cliquant sur l'étoile :star: dans la barre verticale de l'application.
+        </div>
+        <div class="column is-half">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <section id="section8" class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns">
+          <div class="content column md">
+# Imprimer
+
+Pour correctement imprimer la carte, il faut cliquer sur l'icône d'impression en haut à gauche de la carte. Un nouvel onglet s'ouvre alors,
+permettant d'ajuster la carte, de lui ajouter un titre et un commentaire. Les différents éléments peuvent être ajustés en taille.
+
+Enfin, cliquer sur "Générer le document" tout en bas de la page.
+        </div>
+        <div class="column is-half">
+          <video src="casts/howtoprint.webm" autoplay loop>Vidéo d'une impression.</video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+
+<script>
+  (function() {
+    var converter = new showdown.Converter({emoji: true});
+    var markdown = document.getElementsByClassName("md");
+    for (var i = 0; i < markdown.length; i++) {
+      var el = markdown[i];
+      el.innerHTML = converter.makeHtml(el.innerHTML)
+    }
+  })();
+</script>
+</html>
