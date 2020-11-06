@@ -12,8 +12,6 @@ upstream elasticsearch {
 
 server {
     listen 80 default_server;
-    auth_basic "demo";
-    auth_basic_user_file /etc/nginx/htpasswd.av.users;
 
     location ~ ^/(?!<APP_PATH>/?)$ {
         rewrite ^/(.*) <APP_PATH>/$1 permanent;
